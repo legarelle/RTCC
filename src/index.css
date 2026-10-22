@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #18181b; /* Fallback */
+}
+
+button {
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+/* Custom Scrollbar for the dark sidebars */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #18181b; }
+::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+/* --- Layout --- */
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #18181b;
+  border-right: 1px solid #27272a;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #27272a;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* --- Activity Log --- */
+.log-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.log-entry { display: flex; flex-direction: column; gap: 4px; }
+.log-user { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.log-action { color: #a1a1aa; }
+.log-time { font-size: 11px; float: right; color: #71717a; }
+
+/* --- Sidebar Tools --- */
+.tools-section-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.palette { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); /* Forces exactly 4 columns */
+  gap: 12px 8px; /* 12px vertical gap, 8px horizontal gap */
+  margin-bottom: 16px; 
+  justify-items: center;
+}
+
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-sizing: border-box; /* Prevents the border from changing the size of the circle */
+  transition: transform 0.1s ease;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch:hover { transform: scale(1.1); }
+
+.btn-sidebar {
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  color: #d4d4d8;
+  font-weight: 500;
+  text-align: left;
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.btn-sidebar:hover { background-color: #27272a; color: #fff; transform: translateY(-1px); }
+.btn-sidebar:active { transform: translateY(0); }
+
+.btn-delete { background-color: transparent; border: 1px solid #27272a; color: #52525b; cursor: not-allowed; }
+.btn-delete.active { background-color: #ef4444; border-color: #ef4444; color: #fff; cursor: pointer; }
+.btn-delete.active:hover { background-color: #dc2626; }
+
+.user-badge {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #27272a;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* --- Canvas Wrapper & Dynamic Grid Patterns --- */
+.canvas-wrapper {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Light Mode Theme */
+.canvas-wrapper.light {
+  background-color: #f9fafb;
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+}
+
+/* Dark Mode Theme */
+.canvas-wrapper.dark {
+  background-color: #121212;
+  background-image: radial-gradient(#3f3f46 1px, transparent 1px);
+}
+
+/* --- Floating Toolbar (Light Mode Defaults) --- */
+.floating-toolbar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.btn-tool {
+  padding: 12px 20px;
+  cursor: pointer;
+  background-color: #fff;
+  border: none;
+  border-right: 1px solid #e5e7eb;
+  font-weight: 500;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-tool:last-child { border-right: none; }
+.btn-tool:hover { background-color: #f3f4f6; }
+.btn-tool.active { background-color: #eff6ff; color: #2563eb; }
+
+/* --- Floating Toolbar (Dark Mode Overrides) --- */
+.canvas-wrapper.dark .floating-toolbar {
+  background-color: #18181b;
+  border-color: #27272a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+.canvas-wrapper.dark .btn-tool {
+  background-color: #18181b;
+  color: #a1a1aa;
+  border-color: #27272a;
+}
+.canvas-wrapper.dark .btn-tool:hover { background-color: #27272a; }
+.canvas-wrapper.dark .btn-tool.active { background-color: #3f3f46; color: #fff; }
+
+/* --- Bottom Right Theme Toggle Button --- */
+.theme-toggle-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s, border-color 0.3s, transform 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+.canvas-wrapper.dark .theme-toggle-btn {
+  background-color: #18181b;
+  border-color: #27272a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Activity Log Preview Window --- */
+.log-entry {
+  position: relative;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  cursor: default;
+}
+.log-entry:hover {
+  background-color: #27272a;
+}
+
+.log-preview-window {
+  position: fixed; /* Changed from absolute */
+  width: 200px;
+  background-color: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8);
+  z-index: 9999; /* Ensures it floats above all sidebars */
+  pointer-events: none;
+  color: #d4d4d8;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-preview-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid #3f3f46;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+}
